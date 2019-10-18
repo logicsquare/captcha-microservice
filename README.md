@@ -22,7 +22,7 @@ Once enabled, all HTTP requests to the microservice will need to authenticate fi
 | Name    | Type      | Description                          |
 |---------|-----------|--------------------------------------|
 | color     	| Boolean	|  **optional (Default `true`)** <p>Whether the captcha image should be in colors</p> |
-| background	| String  |  **optional (Default `#cc9966`)** <p>Background color</p>	|
+| background	| String  |  **optional (Default `#ffffff`)** <p>Background color</p>	|
 | size		  	| String  | **optional (Default `4`)** <p>Length of Captcha text</p> |
 | timeout		  | Number  | **optional (Default `10`)** <p>Timeout in Minutes</p>	|
 
