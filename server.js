@@ -61,7 +61,7 @@ app.post("/generate", checkAuthMiddleware, async (req, res) => {
     const key = cuid.slug()
     await redis.set(key, captchaText, "EX", timeOutInMinutes * 60)
 
-    return res.status(200).json({ key, captchaSvg })
+    return res.status(200).json({ key, captchaSvg: captchaSvg.replace(/"/g, "'") })
   } catch (e) {
     console.log("==> ERR generating Captcha: ", e);
     return res.status(500).send("Couldn't generate Captcha!!")
