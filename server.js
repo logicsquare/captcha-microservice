@@ -39,7 +39,7 @@ const checkAuthMiddleware = function (req, res, next) {
  * @apiHeader {String} [Authorization] The Access Token in format "Token xxxxyyyyzzzz"
  *
  * @apiParam  {Boolean} [color=true] Whether the captcha image should be in colors
- * @apiParam  {String} [background='#cc9966'] Background color
+ * @apiParam  {String} [background='#ffffff'] Background color
  * @apiParam  {String} [size=4] Length of Captcha text
  * @apiParam  {Number} [timeout=10] Timeout in Minutes
  *
@@ -52,7 +52,7 @@ const checkAuthMiddleware = function (req, res, next) {
 app.post("/generate", checkAuthMiddleware, async (req, res) => {
   const {
     color = true,
-    background = "#cc9966",
+    background = "#ffffff",
     size = 4,
     timeout: timeOutInMinutes = 10
   } = req.body
