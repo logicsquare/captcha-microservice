@@ -16,7 +16,7 @@ The microservice exposes two RESTful routes: one for generating & the other for 
 The routes may optionally be authenticated using a Token string. If you wish to enable auth, set the value `REQUIRE_AUTH="yes"` and specify the secret access token string in the key `ACCESS_TOKEN="xxxxyyyyzzzz"` within the `.env` file.
 Once enabled, all HTTP requests to the microservice will need to authenticate first by setting the `Authorization` header to the format `Token xxxxyyyyzzzz`.
 
-
+### Routes:
 1. `POST /generate`
 #### Parameters
 | Name    | Type      | Description                          |
