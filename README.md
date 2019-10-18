@@ -1,4 +1,4 @@
-# Captcha-Microservice ![node >= 10](https://badgen.net/badge/node/%3E=8/green)
+# Captcha-Microservice ![node >= 10](https://badgen.net/badge/node/%3E=10/green)
 
 This microservice is meant to be used for generating a captcha image (in embeddable SVG format), and later, also to validate it against a response providing the text shown in the said image. Each captcha is uniquely identified by a short key.
 
