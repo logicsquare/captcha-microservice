@@ -2,29 +2,32 @@ const Express = require("express")
 const bodyParser = require("body-parser")
 const svgCaptcha = require("svg-captcha")
 const cuid = require("cuid")
+const Redis = require("ioredis")
+const http = require("http")
 
 require("dotenv").config()
 
-const Redis = require("ioredis")
-const redis = new Redis(process.env.REDIS_CONNECT_STRING)
-
-const http = require("http")
-
+const {
+  PORT,
+  REDIS_CONNECT_STRING,
+  REQUIRE_AUTH,
+  ACCESS_TOKEN,
+  REDIS_NAMESPACE
+} = process.env
 
 const app = Express()
+const redis = new Redis(REDIS_CONNECT_STRING)
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 const server = http.createServer(app)
 
-/** Non-realtime */
-
 const checkAuthMiddleware = function (req, res, next) {
-  if (process.env.REQUIRE_AUTH.toLowerCase() !== "yes") return next()
+  if (REQUIRE_AUTH.toLowerCase() !== "yes") return next()
   try {
     const token = req.get("authorization").split(" ").pop()
-    if (process.env.ACCESS_TOKEN === token) return next()
+    if (ACCESS_TOKEN === token) return next()
     throw new Error()
   } catch (error) {
     return res.status(403).send("INVALID OR MISSING ACCESS TOKEN")
@@ -59,7 +62,7 @@ app.post("/generate", checkAuthMiddleware, async (req, res) => {
   try {
     const { data: captchaSvg, text: captchaText } = svgCaptcha.create({ color, background, size })
     const key = cuid.slug()
-    await redis.set(key, captchaText, "EX", timeOutInMinutes * 60)
+    await redis.set(`${REDIS_NAMESPACE}:key`, captchaText, "EX", timeOutInMinutes * 60)
 
     return res.status(200).json({ key, captchaSvg: captchaSvg.replace(/"/g, "'") })
   } catch (e) {
@@ -81,10 +84,10 @@ app.post("/validate", checkAuthMiddleware, async (req, res) => {
   const { text, key } = req.body
   if (text === undefined || key === undefined) return res.status(400).send("Fields 'text' & 'key' are both mandatory!")
   try {
-    const storedText = await redis.get(key)
+    const storedText = await redis.get(`${REDIS_NAMESPACE}:key`)
     if (storedText === null) throw new Error("Expired Captcha!")
     if (storedText !== text) throw new Error("Invalid Captcha!")
-    await redis.del(key)
+    await redis.del(`${REDIS_NAMESPACE}:key`)
     return res.status(200).send("Valid Captcha!")
   } catch (e) {
     console.log("==> ERR validating Captcha: ", e);
@@ -92,6 +95,6 @@ app.post("/validate", checkAuthMiddleware, async (req, res) => {
   }
 })
 
-server.listen(process.env.PORT || 9090, () => {
-  console.log(`Example app listening on port ${process.env.PORT}`)
+server.listen(PORT || 9090, () => {
+  console.log(`Example app listening on port ${PORT}`)
 })
