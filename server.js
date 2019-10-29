@@ -4,6 +4,7 @@ const svgCaptcha = require("svg-captcha")
 const cuid = require("cuid")
 const Redis = require("ioredis")
 const http = require("http")
+const cors = require("cors")
 
 require("dotenv").config()
 
@@ -18,6 +19,7 @@ const {
 const app = Express()
 const redis = new Redis(REDIS_CONNECT_STRING)
 
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
