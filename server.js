@@ -63,8 +63,8 @@ app.post("/generate", checkAuthMiddleware, async (req, res) => {
   } = req.body
   try {
     const { data: captchaSvg, text: captchaText } = svgCaptcha.create({ color, background, size })
-    const key = cuid.slug()
-    await redis.set(`${REDIS_NAMESPACE}:key`, captchaText, "EX", timeOutInMinutes * 60)
+    const key = cuid()
+    await redis.set(`${REDIS_NAMESPACE}:${key}`, captchaText, "EX", timeOutInMinutes * 60)
 
     return res.status(200).json({ key, captchaSvg: captchaSvg.replace(/"/g, "'") })
   } catch (e) {
@@ -86,10 +86,10 @@ app.post("/validate", checkAuthMiddleware, async (req, res) => {
   const { text, key } = req.body
   if (text === undefined || key === undefined) return res.status(400).send("Fields 'text' & 'key' are both mandatory!")
   try {
-    const storedText = await redis.get(`${REDIS_NAMESPACE}:key`)
+    const storedText = await redis.get(`${REDIS_NAMESPACE}:${key}`)
     if (storedText === null) throw new Error("Expired Captcha!")
     if (storedText !== text) throw new Error("Invalid Captcha!")
-    await redis.del(`${REDIS_NAMESPACE}:key`)
+    await redis.del(`${REDIS_NAMESPACE}:${key}`)
     return res.status(200).send("Valid Captcha!")
   } catch (e) {
     console.log("==> ERR validating Captcha: ", e);
