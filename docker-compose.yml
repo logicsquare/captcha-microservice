@@ -3,9 +3,8 @@ services:
   # Redis Backend
   redis:
     image: redis
-    # uncomment to expose redis
-    # ports:
-    #   - 6379:6379
+    ports:
+      - 6379:6379
   # Exposed service
   captcha-micoservice:
     build: .
