@@ -17,11 +17,11 @@
   "author": "Sayan \"Riju\" Chakrabarti <s26c.sayan@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "cuid": "^2.1.6",
     "dotenv": "^8.2.0",
-    "express": "^4.16.3",
+    "express": "^4.18.2",
     "ioredis": "^4.14.1",
     "svg-captcha": "^1.4.0"
   },
